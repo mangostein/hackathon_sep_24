@@ -1,5 +1,8 @@
 import React from 'react';
 
+const SUBCIRCLE_RADIUS = 250;
+const SPIRO_SEED = 0.33; // between 0 and 1
+
 export default class DanCanvas extends React.Component {
   componentDidMount() {
     window.addEventListener('resize', this.resize);
@@ -67,35 +70,14 @@ export default class DanCanvas extends React.Component {
   }
 
   animateFrame(elapsedMs) {
-    this.angle += .007;
-    if (this.angle > 360) {
-      this.angle = 0;
-    }
-    this.subCircle = this.buildSubCircle(this.boundaryCircle, this.boundaryCircle.r / 5, this.angle);
+    this.radians += .01;
+    this.subCircle = this.buildSubCircle(this.boundaryCircle, SUBCIRCLE_RADIUS, this.radians, this.spiroSeed);
     this.renderCanvas();
 
     // Persist drawing
-    const jerPoint = this.determineSpiroPoint(this.boundaryCircle.r, this.subCircle.r, this.subCircle.r / 2, this.angle);
+    const jerPoint = this.determineSpiroPoint(this.boundaryCircle.r, this.subCircle.r, this.spiroSeed, this.radians, this.boundaryCircle.cx, this.boundaryCircle.cy);
     this.renderPoint(this.ctx2, jerPoint, 1, '#70b5ff');
   }
-
-  determineSpiroPoint(boundaryRadius, subRadius, drawDistFromCenter, angle) {
-    return {
-      x: ((boundaryRadius - subRadius) * Math.cos(angle) +  drawDistFromCenter * Math.cos((boundaryRadius - subRadius)/subRadius * angle)) + this.boundaryCircle.cx,
-      y: ((boundaryRadius - subRadius) * Math.sin(angle) -  drawDistFromCenter * Math.sin((boundaryRadius - subRadius)/subRadius * angle)) + this.boundaryCircle.cy,
-    }
-  }
-
-/*
-ctx.lineWidth = 4;
-ctx.beginPath();
-ctx.lineCap="round";
-ctx.lineJoin="round";
-ctx.moveTo(H1X*M,H1Y*M);
-ctx.lineTo(H1arm1X*M,H1arm1Y*M);
-ctx.lineTo(DRX*M,DRY*M);
-ctx.stroke();
-*/
 
   initialize() {
     const halfWidth = this.height / 2
@@ -104,17 +86,27 @@ ctx.stroke();
       cy: halfWidth,
       r: (halfWidth) - 10,
     }
-    this.angle = 0;
-    this.subCircle = this.buildSubCircle(this.boundaryCircle, this.boundaryCircle.r / 5, this.angle);
+    this.radians = 0;
+    this.spiroSeed = SPIRO_SEED;
+    this.subCircle = this.buildSubCircle(this.boundaryCircle, SUBCIRCLE_RADIUS, this.radians, this.spiroSeed);
+    console.log(this.subCircle);
   }
 
-  buildSubCircle(parentCircle, radius, angle) {
-    const point = this.findPointOnCircle(parentCircle.cx, parentCircle.cy, parentCircle.r - radius, angle);
+  buildSubCircle(parentCircle, radius, radians, spiroSeed) {
+    const point = this.findPointOnCircle(parentCircle.cx, parentCircle.cy, parentCircle.r - radius, radians);
     return {
       cx: point.x,
       cy: point.y,
       r: radius,
-      spiroPoint: this.findPointOnCircle(point.x, point.y, radius * .75, angle)
+      spiroPoint: this.determineSpiroPoint(parentCircle.r, radius, spiroSeed, radians, parentCircle.cx, parentCircle.cy)
+    }
+  }
+
+  determineSpiroPoint(boundaryRadius, subRadius, seed, radians, offsetX, offsetY) {
+    const drawDistFromCenter = subRadius * seed;
+    return {
+      x: ((boundaryRadius - subRadius) * Math.cos(radians) +  drawDistFromCenter * Math.cos((boundaryRadius - subRadius)/subRadius * radians)) + offsetX,
+      y: ((boundaryRadius - subRadius) * Math.sin(radians) -  drawDistFromCenter * Math.sin((boundaryRadius - subRadius)/subRadius * radians)) + offsetY,
     }
   }
 
