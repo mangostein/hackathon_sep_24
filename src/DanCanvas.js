@@ -37,12 +37,30 @@ export default class DanCanvas extends React.Component {
   }
 
   renderBoundaryCircle(ctx) {
-    ctx.fillStyle = '#FFFFFF';
-    const centerX = this.width / 2;
-    const centerY = this.height / 2;
+    ctx.strokeStyle = '#FFFFFF';
+    const halfWidth = this.height / 2
+    const boundaryCenterPoint = {
+      x: this.width / 2,
+      y: halfWidth,
+    }
+    const radius = (halfWidth) - 10;
     ctx.beginPath();
-    ctx.arc(centerX, centerY, this.height / 2, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.arc(boundaryCenterPoint.x, boundaryCenterPoint.y, radius, 0, Math.PI * 2);
+    ctx.stroke();
+
+    const currentAngle = 0;
+    const smallRadius = radius / 5;
+    const startPoint = this.findPointOnCircle(boundaryCenterPoint.x, boundaryCenterPoint.y, radius - smallRadius, currentAngle);
+    ctx.beginPath();
+    ctx.arc(startPoint.x, startPoint.y, smallRadius, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  findPointOnCircle(cx, cy, r, a) {
+    return {
+      x: cx + r * Math.cos(a),
+      y: cy + r * Math.sin(a),
+    }
   }
 
   animate() {

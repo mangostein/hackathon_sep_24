@@ -1,4 +1,4 @@
 .DS_Store
 node_modules
-config/webpack.json
-www
+www/bundle*.js
+www/bundle*.css
