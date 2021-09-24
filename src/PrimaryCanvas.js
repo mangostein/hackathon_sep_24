@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class CanvasApp extends React.Component {
+export default class PrimaryCanvas extends React.Component {
   componentDidMount() {
     window.addEventListener('resize', this.resize);
 
@@ -56,14 +56,7 @@ export default class CanvasApp extends React.Component {
 
 
   initialize() {
-    const baseRadius = this.h / 2;
-    const pentagonCount = 20;
-    this.pentagons = new Array(pentagonCount);
-    for (let i = 0; i < this.pentagons.length; i++) {
-      const direction = i % 2 === 0 ? 1 : -1;
-      const radius = i === 0 ? baseRadius : this.calcSmallerPentagonRadius(this.pentagons[i - 1]);
-      this.pentagons[i] = this.createPentagonPoints(this.h, this.k, radius, direction);
-    }
+
   }
 
   resize = () => {

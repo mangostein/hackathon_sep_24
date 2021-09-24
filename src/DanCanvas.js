@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class BlankCanvas extends React.Component {
+export default class DanCanvas extends React.Component {
   componentDidMount() {
     window.addEventListener('resize', this.resize);
 
@@ -33,10 +33,17 @@ export default class BlankCanvas extends React.Component {
     ctx.fillStyle = "#080808";
     ctx.fillRect(0, 0, this.width, this.height);
 
+    this.renderBoundaryCircle(ctx);
   }
 
-
-
+  renderBoundaryCircle(ctx) {
+    ctx.fillStyle = '#FFFFFF';
+    const centerX = this.width / 2;
+    const centerY = this.height / 2;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, this.height / 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
 
   animate() {
     const elapsedMs = new Date().getTime() - this.lastFrame;
