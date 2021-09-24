@@ -23,7 +23,7 @@ export default class ManojCanvas extends React.Component {
 
   render() {
     return (
-      <canvas ref={ n => this.canvas = n }/>
+      <canvas ref={n => this.canvas = n} />
     );
   }
 
@@ -36,32 +36,10 @@ export default class ManojCanvas extends React.Component {
     const ctx = this.canvas.getContext('2d');
     //ctx.fillStyle = "#f5f5f5";
 
-    var quadrants = {}
-    const widthBy2 = this.width/2
-    const heightBy2 = this.height/2
-    
-    quadrants['q100'] = [0, 0]
-    quadrants['q101'] = [0 , heightBy2]
-    quadrants['q110'] = [0 , widthBy2]
-    quadrants['q111'] = [heightBy2, widthBy2]
+    const widthBy2 = this.width / 2
+    const heightBy2 = this.height / 2
+    // quadrant changes begin 
 
-    quadrants['q200'] = quadrants['q110']
-    quadrants['q201'] = [this.width, 0]
-    quadrants['q210'] = quadrants['q111']
-    quadrants['q211'] = [this.width, heightBy2]
-
-    
-    quadrants['q300'] = quadrants['q111']
-    quadrants['q310'] = quadrants['q211']
-    quadrants['q311'] = [this.width, this.height]
-    quadrants['q301'] = [widthBy2, this.height]
-
-    quadrants['q400'] = quadrants['q101']
-    quadrants['q410'] = quadrants['q111']
-    quadrants['q411'] = quadrants['q301']
-    quadrants['q401'] = [0, this.height]
-
-    console.log(quadrants)
 
     ctx.beginPath();
     ctx.moveTo(0, heightBy2);
@@ -72,6 +50,8 @@ export default class ManojCanvas extends React.Component {
     ctx.moveTo(widthBy2, 0);
     ctx.lineTo(widthBy2, this.height);
     ctx.stroke();
+
+    // quadran changes end
   }
 
   animate() {
@@ -98,8 +78,21 @@ export default class ManojCanvas extends React.Component {
   resize = () => {
     this.width = this.canvas.parentNode.offsetWidth;
     this.height = this.canvas.parentNode.offsetHeight;
-    this.h = this.width/2;
-    this.k = this.height/2;
+    const widthBy2 = this.width / 2
+    const heightBy2 = this.height / 2
+    var quadrants = {
+
+      // coordinates as in 00, 01, 10, 11
+
+      q1: [[0, 0], [0, heightBy2], [widthBy2, 0], [heightBy2, widthBy2]],
+      q2: [[widthBy2, 0], [heightBy2, widthBy2], [this.width, 0], [this.width, heightBy2]],
+      q3: [[heightBy2, widthBy2], [this.height, widthBy2], [this.width, this.heightBy2], [this.width, this.height]],
+      q4: [[0, heightBy2], [heightBy2, widthBy2], [widthBy2, this.height], [0, this.height]]
+    }
+
+    console.log(quadrants)
+    this.h = this.width / 2;
+    this.k = this.height / 2;
     this.canvas.width = this.width;
     this.canvas.height = this.height;
   }
