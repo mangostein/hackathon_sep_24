@@ -75,7 +75,15 @@ export default class DanCanvas extends React.Component {
     this.renderCanvas();
 
     // Persist drawing
-    this.renderPoint(this.ctx2, this.subCircle.spiroPoint, 1, '#70b5ff');
+    const jerPoint = this.determineSpiroPoint(this.boundaryCircle.r, this.subCircle.r, this.subCircle.r / 2, this.angle);
+    this.renderPoint(this.ctx2, jerPoint, 1, '#70b5ff');
+  }
+
+  determineSpiroPoint(boundaryRadius, subRadius, drawDistFromCenter, angle) {
+    return {
+      x: ((boundaryRadius - subRadius) * Math.cos(angle) +  drawDistFromCenter * Math.cos((boundaryRadius - subRadius)/subRadius * angle)) + this.boundaryCircle.cx,
+      y: ((boundaryRadius - subRadius) * Math.sin(angle) -  drawDistFromCenter * Math.sin((boundaryRadius - subRadius)/subRadius * angle)) + this.boundaryCircle.cy,
+    }
   }
 
 /*
