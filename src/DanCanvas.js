@@ -23,45 +23,39 @@ export default class DanCanvas extends React.Component {
 
   render() {
     return (
-      <canvas ref={ n => this.canvas = n }/>
+      <div style={{ height: '100%', width: '100%', position: 'relative' }}>
+        <canvas ref={ n => this.canvas = n } style={{ position: 'absolute' }}/>
+        <canvas ref={ n => this.canvasDraw = n } style={{ position: 'absolute' }}/>
+      </div>
     );
   }
 
   renderCanvas() {
     const ctx = this.canvas.getContext('2d');
+    this.ctx2 = this.canvasDraw.getContext('2d');
 
     ctx.fillStyle = "#080808";
     ctx.fillRect(0, 0, this.width, this.height);
 
-    this.renderBoundaryCircle(ctx);
+    this.renderCircle(ctx, this.boundaryCircle);
+    this.renderCircle(ctx, this.subCircle);
+    this.renderPoint(ctx, this.subCircle.spiroPoint)
   }
 
-  renderBoundaryCircle(ctx) {
+  renderCircle(ctx, circle) {
     ctx.strokeStyle = '#FFFFFF';
-    const halfWidth = this.height / 2
-    const boundaryCenterPoint = {
-      x: this.width / 2,
-      y: halfWidth,
-    }
-    const radius = (halfWidth) - 10;
     ctx.beginPath();
-    ctx.arc(boundaryCenterPoint.x, boundaryCenterPoint.y, radius, 0, Math.PI * 2);
-    ctx.stroke();
-
-    const currentAngle = 0;
-    const smallRadius = radius / 5;
-    const startPoint = this.findPointOnCircle(boundaryCenterPoint.x, boundaryCenterPoint.y, radius - smallRadius, currentAngle);
-    ctx.beginPath();
-    ctx.arc(startPoint.x, startPoint.y, smallRadius, 0, Math.PI * 2);
+    ctx.arc(circle.cx, circle.cy, circle.r, 0, Math.PI * 2);
     ctx.stroke();
   }
 
-  findPointOnCircle(cx, cy, r, a) {
-    return {
-      x: cx + r * Math.cos(a),
-      y: cy + r * Math.sin(a),
-    }
+  renderPoint(ctx, point) {
+    ctx.fillStyle = '#d4ff00';
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+    ctx.fill();
   }
+
 
   animate() {
     const elapsedMs = new Date().getTime() - this.lastFrame;
@@ -73,15 +67,52 @@ export default class DanCanvas extends React.Component {
   }
 
   animateFrame(elapsedMs) {
-    /*
-      do calculations here
-    */
+    this.angle += .007;
+    if (this.angle > 360) {
+      this.angle = 0;
+    }
+    this.subCircle = this.buildSubCircle(this.boundaryCircle, this.boundaryCircle.r / 5, this.angle);
+    this.renderPoint(this.ctx2, this.subCircle.spiroPoint);
     this.renderCanvas();
   }
 
+/*
+ctx.lineWidth = 4;
+ctx.beginPath();
+ctx.lineCap="round";
+ctx.lineJoin="round";
+ctx.moveTo(H1X*M,H1Y*M);
+ctx.lineTo(H1arm1X*M,H1arm1Y*M);
+ctx.lineTo(DRX*M,DRY*M);
+ctx.stroke();
+*/
 
   initialize() {
+    const halfWidth = this.height / 2
+    this.boundaryCircle = {
+      cx: this.width / 2,
+      cy: halfWidth,
+      r: (halfWidth) - 10,
+    }
+    this.angle = 0;
+    this.subCircle = this.buildSubCircle(this.boundaryCircle, this.boundaryCircle.r / 5, this.angle);
+  }
 
+  buildSubCircle(parentCircle, radius, angle) {
+    const point = this.findPointOnCircle(parentCircle.cx, parentCircle.cy, parentCircle.r - radius, angle);
+    return {
+      cx: point.x,
+      cy: point.y,
+      r: radius,
+      spiroPoint: this.findPointOnCircle(point.x, point.y, radius * .75, angle)
+    }
+  }
+
+  findPointOnCircle(cx, cy, r, a) {
+    return {
+      x: cx + r * Math.cos(a),
+      y: cy + r * Math.sin(a),
+    }
   }
 
   resize = () => {
@@ -91,5 +122,7 @@ export default class DanCanvas extends React.Component {
     this.k = this.height/2;
     this.canvas.width = this.width;
     this.canvas.height = this.height;
+    this.canvasDraw.width = this.width;
+    this.canvasDraw.height = this.height;
   }
 }
