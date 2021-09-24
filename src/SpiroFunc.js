@@ -1,12 +1,12 @@
 
-function create_spiro(a, b, d){
+function create_spiro(fixedCircleRad, rotatingCircleRad, drawDistFromCenter){
     let dt = 0.01;
     let t = 0;
     const pts = [];
-    while (t < 2*Math.pi*b / gCD(a, b)){
+    while (t < 2*Math.pi*rotatingCircleRad / gCD(fixedCircleRad, rotatingCircleRad)){
         t += dt;
-        x = (a - b) * Math.cos(t) + d * Math.cos((a - b)/b * t);
-        y = (a - b) * Math.sin(t) - d * Math.sin((a - b)/b * t);
+        x = (fixedCircleRad - rotatingCircleRad) * Math.cos(t) +  drawDistFromCenter * Math.cos((fixedCircleRad - rotatingCircleRad)/rotatingCircleRad * t);
+        y = (fixedCircleRad - rotatingCircleRad) * Math.sin(t) -  drawDistFromCenter * Math.sin((fixedCircleRad - rotatingCircleRad)/rotatingCircleRad * t);
         pts.concat((x, y));
     }
     return pts
