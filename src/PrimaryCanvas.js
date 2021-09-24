@@ -78,5 +78,16 @@ export default class PrimaryCanvas extends React.Component {
       q3: [[heightBy2, widthBy2], [this.height, widthBy2], [this.width, this.heightBy2], [this.width, this.height]],
       q4: [[0, heightBy2], [heightBy2, widthBy2], [widthBy2, this.height], [0, this.height]]
     }
+    const ctx = this.canvas.getContext('2d');
+
+    ctx.beginPath();
+    ctx.moveTo(0, heightBy2);
+    ctx.lineTo(this.width, heightBy2);
+
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(widthBy2, 0);
+    ctx.lineTo(widthBy2, this.height);
+    ctx.stroke();
   }
 }
