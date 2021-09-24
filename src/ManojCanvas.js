@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class PrimaryCanvas extends React.Component {
+export default class ManojCanvas extends React.Component {
   componentDidMount() {
     window.addEventListener('resize', this.resize);
 
@@ -28,17 +28,18 @@ export default class PrimaryCanvas extends React.Component {
   }
 
   renderCanvas() {
-    const ctx = this.canvas.getContext('2d');
 
-    ctx.fillStyle = "#080808";
-    ctx.fillRect(0, 0, this.width, this.height);
+    const q1 = 'Jake'
+    const q2 = 'Manoj'
+    const q3 = 'Jeremiah'
+    const q4 = 'Daniel'
+    const ctx = this.canvas.getContext('2d');
+    //ctx.fillStyle = "#f5f5f5";
 
     var quadrants = {}
     const widthBy2 = this.width/2
     const heightBy2 = this.height/2
     
-    // quadrant changes begin 
-
     quadrants['q100'] = [0, 0]
     quadrants['q101'] = [0 , heightBy2]
     quadrants['q110'] = [0 , widthBy2]
@@ -60,6 +61,8 @@ export default class PrimaryCanvas extends React.Component {
     quadrants['q411'] = quadrants['q301']
     quadrants['q401'] = [0, this.height]
 
+    console.log(quadrants)
+
     ctx.beginPath();
     ctx.moveTo(0, heightBy2);
     ctx.lineTo(this.width, heightBy2);
@@ -69,13 +72,7 @@ export default class PrimaryCanvas extends React.Component {
     ctx.moveTo(widthBy2, 0);
     ctx.lineTo(widthBy2, this.height);
     ctx.stroke();
-
-    // quadran changes end
-
   }
-
-
-
 
   animate() {
     const elapsedMs = new Date().getTime() - this.lastFrame;
@@ -90,9 +87,9 @@ export default class PrimaryCanvas extends React.Component {
     /*
       do calculations here
     */
+
     this.renderCanvas();
   }
-
 
   initialize() {
 
