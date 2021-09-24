@@ -14,7 +14,6 @@ function create_spiro(fixedCircleRad, rotatingCircleRad, drawDistFromCenter){
 
 
 function gCD (x, y){
-   
   x = Math.abs(x);
   y = Math.abs(y);
   while(y) {
@@ -23,4 +22,4 @@ function gCD (x, y){
     x = t;
   }
   return x;
-}   
+}

@@ -49,10 +49,10 @@ export default class DanCanvas extends React.Component {
     ctx.stroke();
   }
 
-  renderPoint(ctx, point) {
-    ctx.fillStyle = '#d4ff00';
+  renderPoint(ctx, point, radius = 5, color = '#d4ff00') {
+    ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+    ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
     ctx.fill();
   }
 
@@ -72,8 +72,10 @@ export default class DanCanvas extends React.Component {
       this.angle = 0;
     }
     this.subCircle = this.buildSubCircle(this.boundaryCircle, this.boundaryCircle.r / 5, this.angle);
-    this.renderPoint(this.ctx2, this.subCircle.spiroPoint);
     this.renderCanvas();
+
+    // Persist drawing
+    this.renderPoint(this.ctx2, this.subCircle.spiroPoint, 1, '#70b5ff');
   }
 
 /*
