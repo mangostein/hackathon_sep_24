@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SUBCIRCLE_RADIUS = 50;
+const SUBCIRCLE_RADIUS = 250;
 const SPIRO_SEED = 0.33; // between 0 and 1
 
 export default class DanCanvas extends React.Component {
